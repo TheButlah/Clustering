@@ -1,12 +1,14 @@
 #Build Files
 build/
+out/
+
 
 #Gradle Files
-.gradle
+.gradle/
 
 #IntelliJ Files
 *.iml
-.idea
+.idea/
 
 #Vim swp files
 *.swp
