@@ -22,7 +22,7 @@ public class CSVReader {
    * @return      List of Point3Ds
    * @throws      FileNotFoundException, IOException
    */
-  private static List<Point3D> read(File file) throws FileNotFoundException,
+  public static List<Point3D> read(File file) throws FileNotFoundException,
                                                       IOException {
 
     // Initialize List of Point3Ds

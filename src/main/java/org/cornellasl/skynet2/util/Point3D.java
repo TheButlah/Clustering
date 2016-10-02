@@ -1,7 +1,7 @@
 package org.cornellasl.skynet2.util;
 
 /**
- * Class describing point in 3D space
+ * Class describing point in 3D space with double precision
  */
 public class Point3D {
 
