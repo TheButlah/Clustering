@@ -1,0 +1,15 @@
+#Build Files
+build/
+
+#Gradle Files
+.gradle
+
+#IntelliJ Files
+*.iml
+.idea
+
+#Vim swp files
+*.swp
+
+#OSX Files
+.DS_Store
