@@ -8,7 +8,45 @@ import java.util.Set;
 
 public class OccupancyGrid {
 
-  public static Set<Point3D> getOccupancyGrid(List<Point3D> point_list,
+  /*public static Set<Point3D> getOccupancyGrid(double[] pointList,
+                                              double xMin,
+                                              double xMax,
+                                              int xNum,
+                                              double yMin,
+                                              double yMax,
+                                              int yNum,
+                                              double zMin,
+                                              double zMax,
+                                              int zNum) {
+
+    double min[] = {xMin, yMin, zMin};
+    double max[] = {xMax, yMax, zMax};
+    int nums[] = {xNum, yNum, zNum};
+    double increments[] = new double[3];
+    for (int i = 0; i < 3; i++) {
+      increments[i] = getIncrement(min[i], max[i], nums[i]);
+    }
+    Set<Point3D> centerPointSet = new HashSet<Point3D>();
+    int numPoints = pointList.length/3;
+    for (int pIndex=0; pIndex<numPoints; pIndex++) {
+      double x = pointList[pIndex*3];
+      double y = pointList[pIndex*3+1];
+      double z = pointList[pIndex*3+2];
+      //double coordinates[] = {point.getX(), point.getY(), point.getZ()};
+      double centers[] = new double[3];
+      for (int i = 0; i < 3; i++) {
+        double offset = getOffset(coordinates[i], min[i]);
+        int index = getIndex(offset, increments[i]);
+        centers[i] = getCenter(index, increments[i]);
+      }
+      Point3D centerPoint = new Point3D(centers[0], centers[1], centers[2]);
+      centerPointSet.add(centerPoint);
+    }
+
+    return centerPointSet;
+  }*/
+
+  public static Set<Point3D> getOccupancyGrid(List<Point3D> pointList,
                                               double xStart,
                                               double xEnd,
                                               int xNum,
@@ -27,7 +65,7 @@ public class OccupancyGrid {
       increments[i] = getIncrement(starts[i], ends[i], nums[i]);
     }
     Set<Point3D> centerPointSet = new HashSet<Point3D>();
-    for (Point3D point: point_list) {
+    for (Point3D point: pointList) {
       double coordinates[] = {point.getX(), point.getY(), point.getZ()};
       double centers[] = new double[3];
       for (int i = 0; i < 3; i++) {

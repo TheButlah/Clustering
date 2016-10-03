@@ -1,12 +1,14 @@
 package org.cornellasl.skynet2.util;
 
 /**
- * Class describing point in 3D space with double precision
+ * Class describing pseudo-immutable point in 3D space with double precision
  */
-public class Point3D {
+public final class Point3D {
 
   // Cartesian coordinates x, y, z
-  private double x, y, z;
+  private final double x, y, z;
+  //Cache the hashcode
+  private int hash = 0;
 
   /**
    * Create a Point3D object with coordinates x, y, z, specified as doubles
@@ -19,6 +21,19 @@ public class Point3D {
     this.y = y;
     this.z = z;
   }
+
+  /**
+   * Create a new array of doubles that represents this Point3D
+   * @return This point as an array of doubles
+   */
+  public double[] getPointArray() {
+    double[] tmp =new double[3];
+    tmp[0] = x;
+    tmp[1] = y;
+    tmp[2] = z;
+    return tmp;
+  }
+
 
   /**
    * x-coordinate getter
@@ -39,14 +54,14 @@ public class Point3D {
   public double getZ() { return this.z; }
 
   /**
-   * Compute the 2-norm distance to another Point3D
+   * Compute the 2-norm distance squared to another Point3D
    * @param  point Another Point3D
    * @return       Distance to other Point3D as double
    */
-  public double getDistance(Point3D point) {
-    return Math.sqrt(getSquareDifference(this.x, point.x) +
-                     getSquareDifference(this.y, point.y) +
-                     getSquareDifference(this.z, point.z));
+  public double getDistanceSquared(Point3D point) {
+    return getSquareDifference(this.x, point.x) +
+      getSquareDifference(this.y, point.y) +
+      getSquareDifference(this.z, point.z);
   }
 
   /**
@@ -55,7 +70,7 @@ public class Point3D {
    * @param   u2 Another double
    * @return  Square difference of doubles
    */
-  public static double getSquareDifference(double u1, double u2) {
+  private static double getSquareDifference(double u1, double u2) {
     return Math.pow(u1 - u2, 2);
   }
 
@@ -75,6 +90,13 @@ public class Point3D {
 
   @Override
   public int hashCode() {
-    return (int) this.x + (int) this.y + (int) this.z;
-  }
+    //Duplicated hash implementation from javafx.geometry.Point3D
+    if (hash == 0) {
+      long bits = 7L;
+      bits = 31L * bits + Double.doubleToLongBits(x);
+      bits = 31L * bits + Double.doubleToLongBits(y);
+      bits = 31L * bits + Double.doubleToLongBits(z);
+      hash = (int) (bits ^ (bits >> 32));
+    }
+    return hash;  }
 }
