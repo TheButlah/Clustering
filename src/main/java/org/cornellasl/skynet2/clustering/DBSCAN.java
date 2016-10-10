@@ -3,7 +3,6 @@ package org.cornellasl.skynet2.clustering;
 import org.cornellasl.skynet2.util.KDTree;
 import org.cornellasl.skynet2.util.Point3D;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -95,7 +94,7 @@ public class DBSCAN {
       index++;
     }
 
-
+    return cluster;
 
 
   }
