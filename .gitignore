@@ -1,7 +1,8 @@
 #Build Files
 build/
 out/
-
+bin/
+obj/
 
 #Gradle Files
 .gradle/

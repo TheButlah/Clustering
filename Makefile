@@ -1,68 +1,96 @@
-# define the compiler to use
-CXX = g++
+# This makefile was based almost entirely on Nicholas Hamilton's makefile:
+# http://stackoverflow.com/a/27794283
 
-# compiler flags:
-# -g 		adds debugging info to the executable
-# -Wall	turns on most compiler warnings
-CXXFLAGS = -g -Wall
+#Compiler and Linker
+CC					:= g++
 
-# define the linker to use
-#LINKER = g++ -o
+#The Target Binary Program
+TARGET			:= cluster
 
-# linker flags
-#LFLAGS = -Wall
-
-# directories other than /usr/include to include
-INCLUDES = -Isrc/main/cpp/include
-
-# define library paths in addition to /usr/lib
-# to include libraries not in /usr/lib I'd specify
-# their path using -Lpath, something like:
-# LFLAGS = -L/home/newhall/lib  -L../lib
-LFLAGS = 
-
-# libraries (end in .so or .a) to link into executable:
-# for example, to link in libmylib.so and libm.so:
-# LIBS = -lmylib -lm
-LDLIBS = 
-
-# define the source files
-SRCS = main.cpp
-
-# define the src directory
-SRCDIR = src/main/cpp 
-# define the obj directory
-OBJDIR = obj
-
-# the target build executable
-TARGET = cluster
-
-############################################################
-#       NOTHING BELOW THIS SHOULD NEED TO BE CHANGED       #
-############################################################
-
-OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-
-print: 
-	@echo "OBJS: "$(OBJS)
-	@echo "SRCS: "$(SRCS)
-
-all: $(TARGET)
+#The Directories, Source, Includes, Objects, Binary and Resources
+SRCDIR			:= src/main/cpp
+INCDIR			:= src/main/cpp/include
+BUILDDIR		:= obj
+TARGETDIR		:= bin
+RESDIR			:= src/main/res
+SRCEXT			:= cpp
+DEPEXT			:= d
+OBJEXT			:= o
 
 
-$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c %< -o $@
-	@echo "Compiled "$<" sucessfully!"
+#Flags, Libraries and Includes
 
-$(TARGET) : $(OBJS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(TARGET) $(OBJS) $(LFLAGS) $(LDLIBS)
-	@echo "Linking complete!"
+# compiler flags: 
+# -Wall		most suggested warnings
+# -g			put in debugging symbols
+# -O3			SUPAR OPTIMIZE
+CFLAGS      := -Wall -O3 -g
+# linker flags:
+# to link library libexample.so or libexample.a, use -lexample
+LIB         :=
+INC         := -I$(INCDIR) -I/usr/local/include
+INCDEP      := -I$(INCDIR)
 
-.PHONY: clean
+#-------------------------------------------------------------------------------
+#DO NOT EDIT BELOW THIS LINE
+#-------------------------------------------------------------------------------
+#configure the shell to have some extra functionality
+#SHELL:=/bin/bash -O extglob
+
+SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
+RESOURCES		:= $(shell find $(RESDIR) -type f)
+
+#Defauilt Make
+all: $(TARGETDIR)/$(TARGET) $(TARGETDIR)
+
+#Remake
+remake: cleaner all
+
+# manually update resources
+resources: $(TARGETDIR)
+
+# make sure TARGETDIR exists, and update the resources if needed
+$(TARGETDIR): $(RESOURCES)
+	mkdir -p $(TARGETDIR)
+	@echo "Updating resources.."
+	rsync -a $(RESDIR)/ $(TARGETDIR)
+	@echo "Resourced updated!"
+	touch $(TARGETDIR)
+
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
+
+#Make the Directories
+#directories:
+#	@mkdir -p $(TARGETDIR)
+#	@mkdir -p $(BUILDDIR)
+
+#Clean only Objecst
 clean:
-	$(RM) $(OBJDIR)/*.o *~ core $(INCDIR)/*~ 
+	rm -rf $(BUILDDIR)
 
-depend: $(SRCS)
-	makedepend $(INCLUDES) $^
+#Full Clean, Objects and Binaries
+cleaner: clean
+	rm -rf $(TARGETDIR)
 
-# DO NOT DELETE THIS LINE -- make depend needs it
+#Pull in dependency info for *existing* .o files
+-include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+
+#Link
+$(TARGETDIR)/$(TARGET): $(OBJECTS) | $(TARGETDIR)
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+
+#Compile
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT) | $(BUILDDIR)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
+#Non-File targets that function more as commands
+.PHONY: all remake clean cleaner resources
