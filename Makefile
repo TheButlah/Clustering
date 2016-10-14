@@ -24,7 +24,7 @@ OBJEXT			:= o
 # -Wall		most suggested warnings
 # -g			put in debugging symbols
 # -O3			SUPAR OPTIMIZE
-CFLAGS      := -Wall -O3 -g
+CFLAGS      := -std=c++0x -Wall -O3 -g
 # linker flags:
 # to link library libexample.so or libexample.a, use -lexample
 LIB         :=
