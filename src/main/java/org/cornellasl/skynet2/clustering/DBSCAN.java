@@ -38,6 +38,7 @@ public class DBSCAN {
     for (Point3D point : points) {
       //K-D tree has keys as array style coordinates, and values as Point3D
       tree.add(point.getPointArray(),point);
+      //System.out.println(point);
     }
   }
 
@@ -49,6 +50,7 @@ public class DBSCAN {
   public List<List<Point3D>> cluster() {
     List<List<Point3D>> clusters = new ArrayList<>();
     for (Point3D point : points) {
+      //System.out.println(point);
 
       //Skip visited points
       if (visited.get(point) != null) continue;
@@ -61,6 +63,7 @@ public class DBSCAN {
       if (neighbors.size() < minPts) {
         visited.put(point, PointStatus.NOISE);
       } else {
+        //Its a core point
         visited.put(point, PointStatus.CLUSTERED);
         clusters.add(expandCluster(point, new ArrayList<Point3D>(), neighbors));
       }
@@ -71,7 +74,6 @@ public class DBSCAN {
   private List<Point3D> expandCluster(Point3D focalPoint, List<Point3D> cluster,
                              List<Point3D> neighbors) {
     cluster.add(focalPoint);
-
     int index = 0;
     while (index < neighbors.size()) {
       Point3D currentPoint = neighbors.get(index);
@@ -102,9 +104,9 @@ public class DBSCAN {
   private List<Point3D> getNeighbors(Point3D point) {
     //construct bounding box centered on point, with l,w,h of 2*eps
     double[] min = point.getPointArray();
-    for (int i=0;i<min.length;i++) min[i]=min[i]-eps;
     double[] max = point.getPointArray();
-    for (int i=0;i<min.length;i++) min[i]=min[i]+eps;
+    for (int i=0;i<min.length;i++) min[i]=min[i]-eps;
+    for (int i=0;i<max.length;i++) max[i]=max[i]+eps;
 
     //Get points within that bounding box to weed out most points
     List<Point3D> neighbors = new ArrayList<>(tree.getRange(min,max));
@@ -122,10 +124,25 @@ public class DBSCAN {
     return neighbors;
   }
 
-  private static <T> List<T> merge(final List<T> c1, final List<T> c2) {
-    final Set<T> mergedCollection = new HashSet<>(c1);
-    mergedCollection.addAll(c2);
-    return new ArrayList<T>(mergedCollection);
+  /**
+   * Merges two lists together.
+   *
+   * @param one first list
+   * @param two second list
+   * @return merged lists
+   */
+  private static <T> List<T> merge(final List<T> one, final List<T> two) {
+    final Set<T> oneSet = new HashSet<T>(one);
+      for (T item : two) {
+        if (!oneSet.contains(item)) {
+          one.add(item);
+        }
+      }
+    return one;
+    /*
+    final Set<T> mergedCollection = new HashSet<>(one);
+    mergedCollection.addAll(one);
+    return new ArrayList<T>(mergedCollection);*/
   }
 
   private enum PointStatus {
