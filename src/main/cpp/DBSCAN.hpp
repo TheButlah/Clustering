@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <set>
 #include "Point3D.hpp"
 #include "include/nanoflann.hpp"
 
@@ -9,6 +8,8 @@ class DBSCAN {
   private:
     struct PointCloud {
       std::vector<Point3D> pts;
+
+      PointCloud(std::vector<Point3D> points) : pts(points) {}
 
       inline size_t kdtree_get_point_count() const { return pts.size(); }
 
@@ -33,21 +34,23 @@ class DBSCAN {
 
 
     enum PointStatus { NOISE, CLUSTERED };    
-    int numPoints;
-    std::vector<Point3D> points;
+    //int numPoints;
+    //std::vector<Point3D> points;
     typedef std::unordered_map<Point3D, PointStatus> statusmap_t;
     statusmap_t visited;
     
-    typedef int my_kd_tree_t;
-    /*typedef nanoflann::KDTreeSingleIndexAdaptor<
+    //typedef int my_kd_tree_t;
+    typedef nanoflann::KDTreeSingleIndexAdaptor<
             nanoflann::L2_Simple_Adaptor<double,PointCloud>, 
             PointCloud, 
             3
-            > my_kd_tree_t;*/
+            > my_kd_tree_t;
     my_kd_tree_t tree;
 
     const double eps;
     const int minPts;
+
+    const PointCloud cloud;
 
     void expandCluster(Point3D focalPoint,
                        const std::vector<Point3D>& cluster,

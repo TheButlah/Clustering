@@ -16,6 +16,7 @@ obj/
 
 #Vim swp files
 *.swp
+*.swo
 
 #OSX Files
 .DS_Store
