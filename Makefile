@@ -2,10 +2,10 @@
 # http://stackoverflow.com/a/27794283
 
 #Compiler and Linker
-CC			:= g++
+CC			:= x86_64-w64-mingw32-g++
 
 #The Target Binary Program
-TARGET			:= cluster
+TARGET			:= cluster.exe
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR			:= src/main/cpp

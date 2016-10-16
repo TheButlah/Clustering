@@ -1,7 +1,7 @@
-using namespace std;
 #include <iostream>
-#include "include/nanoflann.hpp"
+
+using namespace std;
 
 int main(int argc, char** argv) {
-  cout << "hello";
+    cout << "hello";
 }
