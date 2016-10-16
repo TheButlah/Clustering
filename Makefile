@@ -2,7 +2,7 @@
 # http://stackoverflow.com/a/27794283
 
 #Compiler and Linker
-CC					:= g++
+CC			:= g++
 
 #The Target Binary Program
 TARGET			:= cluster
@@ -64,10 +64,10 @@ $(BUILDDIR):
 
 #Make the Directories
 #directories:
-#	@mkdir -p $(TARGETDIR)
-#	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILDDIR)
 
-#Clean only Objecst
+#Clean only Objects
 clean:
 	rm -rf $(BUILDDIR)
 
