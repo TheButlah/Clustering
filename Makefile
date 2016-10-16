@@ -64,8 +64,8 @@ $(BUILDDIR):
 
 #Make the Directories
 #directories:
-	@mkdir -p $(TARGETDIR)
-	@mkdir -p $(BUILDDIR)
+#	@mkdir -p $(TARGETDIR)
+#	@mkdir -p $(BUILDDIR)
 
 #Clean only Objects
 clean:

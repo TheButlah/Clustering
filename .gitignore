@@ -1,3 +1,6 @@
+#Cmake file (until we get it working)
+CMakeLists.txt
+
 #Results
 src/main/java/results/
 
