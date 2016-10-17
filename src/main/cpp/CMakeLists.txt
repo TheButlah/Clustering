@@ -10,8 +10,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(DBSCAN_FILES
     DBSCAN.cpp
     Point3D.cpp
-    PointCloud.cpp
-)
+        )
 
 add_library(dbscan ${DBSCAN_FILES})
 add_executable(demo main.cpp)

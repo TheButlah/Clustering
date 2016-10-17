@@ -27,13 +27,13 @@ class DBSCAN {
 
     const PointCloud cloud;
 
-    const my_kd_tree_t tree;
+    my_kd_tree_t tree;
 
     void expandCluster(Point3D focalPoint,
                        const std::vector<Point3D>& cluster,
                        const std::vector<Point3D>& neighbors);
 
-    std::vector<Point3D> getNeighbors(Point3D point);
+    std::vector<Point3D> getNeighbors(const Point3D& point);
 
 
   public:
