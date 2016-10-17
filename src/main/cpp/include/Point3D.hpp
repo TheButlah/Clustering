@@ -4,12 +4,18 @@
 #include <unordered_map>
 
 struct Point3D {
-    double x,y,z;
+  double x,y,z;
 
-    bool operator==(const Point3D &o) const;
+  bool operator==(const Point3D &o) const;
 
-    bool operator!=(const Point3D &o) const;
+  bool operator!=(const Point3D &o) const;
+
 };
+
+//Defined outside struct because otherwise implicit [this] breaks it
+inline std::ostream& operator<<(std::ostream& out, const Point3D& p){
+  return out << "(" << p.x << ", " << p.y << ", " << p.z << ")";
+}
 
 //This code adds hashing functionality for Point3D to std::hash
 namespace std {
