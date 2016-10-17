@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include "Point3D.hpp"
-#include "../nanoflann.hpp"
-#include "../PointCloud.hpp"
+#include "nanoflann.hpp"
+#include "PointCloud.hpp"
 
 
 class DBSCAN {

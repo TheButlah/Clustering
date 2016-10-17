@@ -1,11 +1,11 @@
-#include "PointCloud.hpp"
+#include "include/PointCloud.hpp"
 
 PointCloud::PointCloud(std::vector<Point3D> points) : pts(points) {}
 
-inline size_t PointCloud::kdtree_get_point_count() const { return pts.size(); }
+size_t PointCloud::kdtree_get_point_count() const { return pts.size(); }
 
 
-inline double PointCloud::kdtree_distance(const double* p1,
+double PointCloud::kdtree_distance(const double* p1,
                               const size_t idx_p2,
                               size_t) const {
     const double d0=p1[0]-pts[idx_p2].x;
@@ -14,7 +14,7 @@ inline double PointCloud::kdtree_distance(const double* p1,
     return d0*d0+d1*d1+d2*d2;
 }
 
-inline double PointCloud::kdtree_get_pt(const size_t idx, int dim) const {
+double PointCloud::kdtree_get_pt(const size_t idx, int dim) const {
     if (dim==0) return pts[idx].x;
     else if (dim==1) return pts[idx].y;
     else return pts[idx].z;

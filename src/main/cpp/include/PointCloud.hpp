@@ -1,6 +1,6 @@
 #pragma once
 
-#include "include/Point3D.hpp"
+#include "Point3D.hpp"
 #include <vector>
 
 struct PointCloud {
