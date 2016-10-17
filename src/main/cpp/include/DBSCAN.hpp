@@ -16,7 +16,7 @@ class DBSCAN {
     
     //typedef int my_kd_tree_t;
     typedef nanoflann::KDTreeSingleIndexAdaptor<
-            nanoflann::L2_Simple_Adaptor<double,PointCloud>, 
+            nanoflann::L2_Simple_Adaptor<double,PointCloud>,
             PointCloud, 
             3
             > my_kd_tree_t;
@@ -33,12 +33,26 @@ class DBSCAN {
                        const std::vector<Point3D>& cluster,
                        const std::vector<Point3D>& neighbors);
 
-    std::vector<Point3D> getNeighbors(const Point3D& point);
+    std::vector<size_t> getNeighbors(const Point3D& point);
 
 
   public:
-    DBSCAN(std::vector<Point3D> points, double epsilon, int minPts);
+    DBSCAN(const std::vector<Point3D>& points, double epsilon, int minPts);
     std::vector< std::vector<Point3D> > cluster();
-    static void merge(std::vector<Point3D>& resultVector,
-                      std::vector<Point3D>& otherVector);
+
+    //inlined because templates in C++ need to be fully defined in headers
+    template<class T>
+    inline static void merge(std::vector<T>& resultVector,
+                      std::vector<T>& otherVector) {
+
+      remove_copy_if(otherVector.begin(),otherVector.end(),
+                     back_inserter(resultVector),
+                     //This is a lambda function
+                     [&resultVector](T elt) -> bool {
+                         return resultVector.end() !=
+                                find(resultVector.begin(),resultVector.end(), elt);
+
+                     }
+      );
+    }
 };

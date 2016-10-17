@@ -9,8 +9,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 #Helper variable for all the source files
 set(DBSCAN_FILES
     DBSCAN.cpp
-    Point3D.cpp
-        )
+    Point3D.cpp)
 
 add_library(dbscan ${DBSCAN_FILES})
 add_executable(demo main.cpp)

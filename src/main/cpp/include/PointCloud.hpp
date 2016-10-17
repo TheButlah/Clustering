@@ -4,7 +4,7 @@
 #include <vector>
 
 struct PointCloud {
-  std::vector<Point3D> pts;
+  const std::vector<Point3D>& pts;
 
   inline size_t kdtree_get_point_count() const {
     return pts.size();
