@@ -10,11 +10,12 @@ using std::ifstream;
 using std::cout;
 using std::endl;
 using std::vector;
+using std::size_t;
 
 int main() {
   vector<Point3D> points;
   string line;
-  ifstream fid ("1modmod.csv");
+  ifstream fid ("occ.csv");
   if (fid.is_open()) {
     while (getline(fid, line)) {
       string::iterator it = line.begin();
@@ -40,13 +41,15 @@ int main() {
   vector<vector<Point3D> > clusters = dbscan.cluster();
   auto finish = std::chrono::high_resolution_clock::now();
   vector<vector<Point3D> >::iterator it = clusters.begin();
+  size_t idx = 0;
   for (; it != clusters.end(); it++) {
     vector<Point3D> cluster = *it;
     vector<Point3D>::iterator inner_it = cluster.begin();
     for (; inner_it != cluster.end(); inner_it++) {
       Point3D point = *inner_it;
-      cout << point << endl;
+      // cout << point << ", " << idx << endl;
     }
+    idx++;
   }
   cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
   return 0;

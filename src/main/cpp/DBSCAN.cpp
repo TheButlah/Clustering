@@ -82,6 +82,7 @@ vector<Point3D> DBSCAN::getNeighbors(Point3D point) {
   for (auto pair : pairs) {
     neighbors.push_back(cloud.pts[pair.first]);
   }
+  cout << neighbors.size() << endl;
   return neighbors;
 }
 
