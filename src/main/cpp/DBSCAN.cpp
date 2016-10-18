@@ -1,5 +1,7 @@
 #include "include/DBSCAN.hpp"
-
+#define UNVISITED 0
+#define NOISE 1
+#define CLUSTERED 2
 
 using namespace std;
 
@@ -14,19 +16,19 @@ vector< vector<Point3D> > DBSCAN::cluster() {
   for (const Point3D& point : cloud.pts) {
     //Holds a reference to the pointStatus in the vector,
     //can directly assign things to this variable and it will work
-    PointStatus& status = visited[point];
+    uint8_t& status = visited[point];
 
-    if (status != PointStatus::UNVISITED) continue;
+    if (status != UNVISITED) continue;
 
     //Detect nearest neighbors based on eps value
     vector<Point3D> neighbors = getNeighbors(point);
 
     if (neighbors.size()<minPts) {
       //Density not high enough, this is noise (can change later though)
-      status = PointStatus::NOISE;
+      status = NOISE;
     } else {
       //Its a core point, mark it
-      status = PointStatus::CLUSTERED;
+      status = CLUSTERED;
       vector<Point3D> newCluster;
       expandCluster(point,newCluster,neighbors);
       clusters.push_back(newCluster);
@@ -47,8 +49,8 @@ void DBSCAN::expandCluster(Point3D focalPoint, std::vector<Point3D>& cluster,
     Point3D currentPoint = neighbors[i];
     //Holds a reference to the pointStatus in the vector,
     //can directly assign things to this variable and it will work
-    PointStatus& pointStatus = visited[currentPoint];
-    if (pointStatus == PointStatus::UNVISITED) {
+    uint8_t& pointStatus = visited[currentPoint];
+    if (pointStatus == UNVISITED) {
       vector<Point3D> newNeighbors = getNeighbors(currentPoint);
       if (newNeighbors.size() >= minPts) {
         merge(neighbors,newNeighbors);
@@ -57,8 +59,8 @@ void DBSCAN::expandCluster(Point3D focalPoint, std::vector<Point3D>& cluster,
     }
 
     //These points are visited, but might still be flagged as UNVISITED
-    if (pointStatus != PointStatus::CLUSTERED) {
-      pointStatus = PointStatus::CLUSTERED;
+    if (pointStatus != CLUSTERED) {
+      pointStatus = CLUSTERED;
       cluster.push_back(currentPoint);
     }
 
