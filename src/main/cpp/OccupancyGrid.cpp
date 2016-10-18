@@ -1,4 +1,4 @@
-#include "OccupancyGrid.hpp"
+#include "include/OccupancyGrid.hpp"
 #include <unordered_set>
 #include <cstddef>
 
@@ -41,7 +41,7 @@ double OccupancyGrid::round_to_center(double start,
 }
 
 vector<Point3D> OccupancyGrid::get_grid() {
-  unordered_set<Point3D, Point3D::Hash> center_point_set;
+  unordered_set<Point3D> center_point_set;
   vector<Point3D>::iterator point_it = points.begin();
   for (; point_it < points.end(); point_it++) {
     double x_center = round_to_center(this->x_min,
