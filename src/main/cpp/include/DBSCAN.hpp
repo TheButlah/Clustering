@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Point3D.hpp"
+#include "Point3.hpp"
 #include "nanoflann.hpp"
 #include "PointCloud.hpp"
 
@@ -8,9 +8,9 @@
 class DBSCAN {
 
   public:
-    enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
-    DBSCAN(const std::vector<Point3D>& points, double epsilon, int minPts);
-    std::vector< std::vector<Point3D> > cluster();
+    //enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
+    DBSCAN(const std::vector<Point3>& points, double epsilon, int minPts);
+    std::vector< std::vector<Point3> > cluster();
 
     //inlined because templates in C++ need to be fully defined in headers
     template<class T>
@@ -28,11 +28,11 @@ class DBSCAN {
 
   private:
     //int numPoints;
-    //std::vector<Point3D> points;
-    typedef std::unordered_map<Point3D, PointStatus> statusmap_t;
-    
+    //std::vector<Point3> points;
+    typedef std::unordered_map<Point3, uint8_t > statusmap_t;
+
     typedef nanoflann::KDTreeSingleIndexAdaptor<
-            nanoflann::L2_Simple_Adaptor<double,PointCloud>,
+            nanoflann::L2_Simple_Adaptor<float,PointCloud>,
             PointCloud, 
             3
             > my_kd_tree_t;
@@ -45,9 +45,9 @@ class DBSCAN {
     my_kd_tree_t tree;
     statusmap_t visited;
 
-    void expandCluster(Point3D focalPoint,
-                       std::vector<Point3D>& cluster,
-                       std::vector<Point3D>& neighbors);
+    void expandCluster(Point3 focalPoint,
+                       std::vector<Point3>& cluster,
+                       std::vector<Point3>& neighbors);
 
-    std::vector<Point3D> getNeighbors(Point3D point);
+    std::vector<Point3> getNeighbors(Point3 point);
 };

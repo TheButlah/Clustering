@@ -1,10 +1,10 @@
 all:
-	mkdir -p build && cd build && cmake .. && make && cd ..
+	mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make && cd ..
 
 clean:
-	rm -rf build	
+	rm -rf build
 
-run: 
+run:
 	cd build/res && ./demo && cd ../..
 
 ################## OLD MAKEFILE ##############################
@@ -31,7 +31,7 @@ run:
 #
 ##Flags, Libraries and Includes
 #
-## compiler flags: 
+## compiler flags:
 ## -Wall		most suggested warnings
 ## -g			put in debugging symbols
 ## -O3			SUPAR OPTIMIZE
