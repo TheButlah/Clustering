@@ -3,6 +3,7 @@
 #include <string>
 #include <stdlib.h>
 #include <chrono>
+#include "include/OccupancyGrid.hpp"
 #include "include/DBSCAN.hpp"
 
 using std::string;
@@ -15,7 +16,7 @@ using std::size_t;
 int main() {
   vector<Point3D> points;
   string line;
-  ifstream fid ("occ.csv");
+  ifstream fid ("1modmod.csv");
   if (fid.is_open()) {
     while (getline(fid, line)) {
       string::iterator it = line.begin();
@@ -37,7 +38,12 @@ int main() {
     fid.close();
   }
   auto start = std::chrono::high_resolution_clock::now();
-  DBSCAN dbscan(points, 1, 20);
+  OccupancyGrid occupancy_grid = OccupancyGrid(points,
+                                               -120, 120, 960,
+                                               -100, 100, 800,
+                                               -20, -20, 160);
+  vector<Point3D> center_points = occupancy_grid.get_grid();
+  DBSCAN dbscan(center_points, 2, 20);
   vector<vector<Point3D> > clusters = dbscan.cluster();
   auto finish = std::chrono::high_resolution_clock::now();
   vector<vector<Point3D> >::iterator it = clusters.begin();
@@ -47,11 +53,11 @@ int main() {
     vector<Point3D>::iterator inner_it = cluster.begin();
     for (; inner_it != cluster.end(); inner_it++) {
       Point3D point = *inner_it;
-      cout << point << ", " << idx << endl;
+      // cout << point << ", " << idx << endl;
     }
     idx++;
   }
-  // cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
-  // cout << clusters.size() << endl;
+  cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
+  cout << clusters.size() << endl;
   return 0;
 }
