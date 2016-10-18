@@ -14,7 +14,7 @@ struct Point3D {
 
 //Defined outside struct because otherwise implicit [this] breaks it
 inline std::ostream& operator<<(std::ostream& out, const Point3D& p){
-  return out << "(" << p.x << ", " << p.y << ", " << p.z << ")";
+  return out << p.x << ", " << p.y << ", " << p.z;
 }
 
 //This code adds hashing functionality for Point3D to std::hash

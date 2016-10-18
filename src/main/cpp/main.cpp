@@ -37,20 +37,21 @@ int main() {
     fid.close();
   }
   auto start = std::chrono::high_resolution_clock::now();
-  DBSCAN dbscan(points, 2, 10);
+  DBSCAN dbscan(points, 1, 20);
   vector<vector<Point3D> > clusters = dbscan.cluster();
   auto finish = std::chrono::high_resolution_clock::now();
   vector<vector<Point3D> >::iterator it = clusters.begin();
-  size_t idx = 0;
+  size_t idx = 1;
   for (; it != clusters.end(); it++) {
     vector<Point3D> cluster = *it;
     vector<Point3D>::iterator inner_it = cluster.begin();
     for (; inner_it != cluster.end(); inner_it++) {
       Point3D point = *inner_it;
-      // cout << point << ", " << idx << endl;
+      cout << point << ", " << idx << endl;
     }
     idx++;
   }
-  cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
+  // cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
+  // cout << clusters.size() << endl;
   return 0;
 }
