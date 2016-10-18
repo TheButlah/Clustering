@@ -4,6 +4,9 @@ all:
 clean:
 	rm -rf build	
 
+run: 
+	cd build/res && ./demo && cd ../..
+
 ################## OLD MAKEFILE ##############################
 
 ## This makefile was based almost entirely on Nicholas Hamilton's makefile:

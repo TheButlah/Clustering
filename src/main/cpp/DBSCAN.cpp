@@ -97,5 +97,3 @@ void DBSCAN::merge(vector<T>& resultVector,
                  }
   );
 }*/
-
-

@@ -22,7 +22,7 @@ namespace std {
     template <>
     struct hash<Point3D> {
         std::size_t operator()(const Point3D& k) const {
-            std::cout << "hashing a Point3d!";
+            // std::cout << "hashing a Point3d!";
             std::size_t res = 17;
             res = res * 31 + std::hash<double>()( k.x );
             res = res * 31 + std::hash<double>()( k.y );
