@@ -40,14 +40,20 @@ int main() {
                                                -100.0, 100.0, 800,
                                                -20.0, 20.0, 160);
   vector<Point3D> center_points = occupancy_grid.get_grid();
+  DBSCAN dbscan = DBSCAN(center_points, 2, 10);
+  vector<vector<Point3D> > clusters = dbscan.cluster();
   auto finish = std::chrono::high_resolution_clock::now();
-  vector<Point3D>::iterator it = center_points.begin();
-  int num = 0;
+  vector<vector<Point3D> >::iterator it = clusters.begin();
+  int idx = 0;
   for (; it < center_points.end(); it++) {
-    num++;
-    cout << *it << endl;
+    vector<Point3D>::iterator cluster_it = it->begin();
+    for (; cluster_it < it->end; cluster_it++) {
+      // Print points
+      cout << cluster_it + ", " + idx << endl;
+    }
+    idx++;
   }
-  cout << num << endl;
+  // Print time
   cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
   return 0;
 }
