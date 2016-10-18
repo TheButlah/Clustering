@@ -3,7 +3,7 @@
 #include <string>
 #include <stdlib.h>
 #include <chrono>
-#include "OccupancyGrid.hpp"
+#include "include/OccupancyGrid.hpp"
 
 using std::string;
 using std::ifstream;
@@ -13,7 +13,7 @@ using std::endl;
 int main() {
   vector<Point3D> points;
   string line;
-  ifstream fid ("data/1.csv");
+  ifstream fid ("1modmod.csv");
   if (fid.is_open()) {
     while (getline(fid, line)) {
       string::iterator it = line.begin();
