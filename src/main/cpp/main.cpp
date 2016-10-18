@@ -1,47 +1,53 @@
 #include <iostream>
-#include <vector>
-#include "include/Point3D.hpp"
-#include "DBSCAN.hpp"
+#include <fstream>
+#include <string>
+#include <stdlib.h>
+#include <chrono>
+#include "OccupancyGrid.hpp"
 
+using std::string;
+using std::ifstream;
+using std::cout;
+using std::endl;
 
-using namespace std;
-
-//let PointStatus print its value
-std::ostream& operator<<(std::ostream& out, const DBSCAN::PointStatus value) {
-  const char *s = 0;
-#define PROCESS_VAL(p) case(p): s = #p; break;
-  switch (value) {
-    PROCESS_VAL(DBSCAN::PointStatus::UNVISITED);
-    PROCESS_VAL(DBSCAN::PointStatus::NOISE);
-    PROCESS_VAL(DBSCAN::PointStatus::CLUSTERED);
+int main() {
+  vector<Point3D> points;
+  string line;
+  ifstream fid ("data/1.csv");
+  if (fid.is_open()) {
+    while (getline(fid, line)) {
+      string::iterator it = line.begin();
+      vector<double> point_doubles;
+      string buffer = "";
+      for (; it != line.end(); it++) {
+        if (*it == ',') {
+          point_doubles.push_back(atof(buffer.c_str()));
+          buffer = "";
+        } else if (*it != '\n') {
+          buffer += *it;
+        }
+      }
+      double x = point_doubles.at(0);
+      double y = point_doubles.at(1);
+      double z = atof(buffer.c_str());
+      points.push_back(Point3D{x, y, z});
+    }
+    fid.close();
   }
-#undef PROCESS_VAL
-  return out << s;
-}
-
-int main(int argc, char** argv) {
-  vector<Point3D> cluster1{{1.0,2.0,3.0},{4.0,5.0,6.0}};
-  vector<Point3D> cluster2{{3.0,2.0,1.0},{1.0,2.0,3.0},{0.0,0.0,0.0}};
-  DBSCAN::merge(cluster1,cluster2);
-  //std::boolalpha flag sets bool values to be printed as text
-  cout << "isPod<Point3D>: " << boolalpha << is_pod<Point3D>::value << endl;
-  cout << "merged cluster: " << endl;
-  for (auto i : cluster1) {
-    cout << i << " ";
+  auto start = std::chrono::high_resolution_clock::now();
+  OccupancyGrid occupancy_grid = OccupancyGrid(points,
+                                               -120.0, 120.0, 960,
+                                               -100.0, 100.0, 800,
+                                               -20.0, 20.0, 160);
+  vector<Point3D> center_points = occupancy_grid.get_grid();
+  auto finish = std::chrono::high_resolution_clock::now();
+  vector<Point3D>::iterator it = center_points.begin();
+  int num = 0;
+  for (; it < center_points.end(); it++) {
+    num++;
+    cout << *it << endl;
   }
-  cout << endl;
-  //cout << "asdf" << DBSCAN::PointStatus::UNVISITED;
-  vector<DBSCAN::PointStatus> vec(3);
-  for (DBSCAN::PointStatus elt : vec) {
-    cout << elt << endl;
-  }
-
-  int herp = 1;
-  int& derp = herp;
-  cout << "herp: " << herp << endl;
-  cout << "derp: " << derp << endl;
-  derp = 2;
-  cout << "herp: " << herp << endl;
-  cout << "derp: " << derp << endl;
-
+  cout << num << endl;
+  cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
+  return 0;
 }
