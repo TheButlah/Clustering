@@ -29,7 +29,7 @@ class DBSCAN {
   private:
     //int numPoints;
     //std::vector<Point3> points;
-    typedef std::unordered_map<Point3, uint8_t > statusmap_t;
+    typedef std::unordered_map<size_t, uint8_t > statusmap_t;
 
     typedef nanoflann::KDTreeSingleIndexAdaptor<
             nanoflann::L2_Simple_Adaptor<float,PointCloud>,
@@ -45,9 +45,9 @@ class DBSCAN {
     my_kd_tree_t tree;
     statusmap_t visited;
 
-    void expandCluster(Point3 focalPoint,
-                       std::vector<Point3>& cluster,
-                       std::vector<Point3>& neighbors);
+    void expandCluster(size_t focalPoint,
+                       std::vector<size_t>& cluster,
+                       std::vector<size_t>& neighbors);
 
-    std::vector<Point3> getNeighbors(Point3 point);
+    std::vector<size_t> getNeighbors(size_t point);
 };

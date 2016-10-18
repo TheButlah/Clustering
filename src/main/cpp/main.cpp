@@ -52,7 +52,7 @@ int main() {
     vector<Point3> cluster = *it;
     vector<Point3>::iterator inner_it = cluster.begin();
     for (; inner_it != cluster.end(); inner_it++) {
-      Point3 point = *inner_it;
+      //Point3 point = *inner_it;
       // cout << point << ", " << idx << endl;
     }
     idx++;
