@@ -1,14 +1,14 @@
 #pragma once
 #include <vector>
 #include <set>
-#include "Point3D.hpp"
+#include "Point3.hpp"
 
 using std::vector;
 using std::set;
 
 class OccupancyGrid {
 private:
-  vector<Point3D> points;
+  vector<Point3> points;
   double x_min, y_min, z_min;
   double x_max, y_max, z_max;
   int x_num, y_num, z_num;
@@ -21,9 +21,9 @@ private:
                                 int num,
                                 double coordinate);
 public:
-  OccupancyGrid(const vector<Point3D>& points,
+  OccupancyGrid(const vector<Point3>& points,
                 double x_min, double x_max, int x_num,
                 double y_min, double y_max, int y_num,
                 double z_min, double z_max, int z_num);
-  vector<Point3D> get_grid();
+  vector<Point3> get_grid();
 };

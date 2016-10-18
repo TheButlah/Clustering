@@ -5,7 +5,7 @@
 using std::unordered_set;
 
 
-OccupancyGrid::OccupancyGrid(const vector<Point3D>& points,
+OccupancyGrid::OccupancyGrid(const vector<Point3>& points,
                              double x_min, double x_max, int x_num,
                              double y_min, double y_max, int y_num,
                              double z_min, double z_max, int z_num) :
@@ -40,9 +40,9 @@ double OccupancyGrid::round_to_center(double start,
   return get_center(index, increment, start);
 }
 
-vector<Point3D> OccupancyGrid::get_grid() {
-  unordered_set<Point3D> center_point_set;
-  vector<Point3D>::iterator point_it = points.begin();
+vector<Point3> OccupancyGrid::get_grid() {
+  unordered_set<Point3> center_point_set;
+  vector<Point3>::iterator point_it = points.begin();
   for (; point_it < points.end(); point_it++) {
     double x_center = round_to_center(this->x_min,
                                       this->x_max,
@@ -56,9 +56,9 @@ vector<Point3D> OccupancyGrid::get_grid() {
                                       this->z_max,
                                       this->z_num,
                                       point_it->z);
-    center_point_set.insert(Point3D{x_center, y_center, z_center});
+    center_point_set.insert(Point3{x_center, y_center, z_center});
   }
-  vector<Point3D> center_point_vector;
+  vector<Point3> center_point_vector;
   auto center_it = center_point_set.begin();
   for (; center_it != center_point_set.end(); center_it++) {
     center_point_vector.push_back(*center_it);
