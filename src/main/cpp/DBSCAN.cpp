@@ -4,7 +4,7 @@
 using namespace std;
 
 DBSCAN::DBSCAN(const vector<Point3D>& points, double epsilon, int minPts) :
-  eps(epsilon), minPts(minPts), cloud(PointCloud{points}),
+  eps(epsilon), minPts((size_t) minPts), cloud(PointCloud{points}),
   tree(3,cloud,nanoflann::KDTreeSingleIndexAdaptorParams(10)) {
   tree.buildIndex();
 }
@@ -25,7 +25,7 @@ vector< vector<Point3D> > DBSCAN::cluster() {
       //Density not high enough, this is noise (can change later though)
       status = PointStatus::NOISE;
     } else {
-      //Its a core point
+      //Its a core point, mark it
       status = PointStatus::CLUSTERED;
       vector<Point3D> newCluster;
       expandCluster(point,newCluster,neighbors);
@@ -33,6 +33,40 @@ vector< vector<Point3D> > DBSCAN::cluster() {
     }
   }
   return clusters;
+}
+
+/**
+ * IMPORTANT: Mutates the neighbors vector, recommend no using it after this
+ */
+void DBSCAN::expandCluster(Point3D focalPoint, std::vector<Point3D>& cluster,
+                           std::vector<Point3D>& neighbors) {
+  cluster.push_back(focalPoint);
+  auto it = cluster.begin();
+  int i = 0;
+  while (it != cluster.end()) {
+    Point3D currentPoint = neighbors[i];
+    //Holds a reference to the pointStatus in the vector,
+    //can directly assign things to this variable and it will work
+    PointStatus& pointStatus = visited[currentPoint];
+    if (pointStatus == PointStatus::UNVISITED) {
+      vector<Point3D> newNeighbors = getNeighbors(currentPoint);
+      if (newNeighbors.size() >= minPts) {
+        merge(neighbors,newNeighbors);
+      }
+      //Otherwise, dont add the new neighbors
+    }
+
+    //These points are visited, but might still be flagged as UNVISITED
+    if (pointStatus != PointStatus::CLUSTERED) {
+      pointStatus = PointStatus::CLUSTERED;
+      cluster.push_back(currentPoint);
+    }
+
+    //increment iterator, use this instead of it++ to be generic
+    advance(it,1);
+    i++;
+  }
+
 }
 
 

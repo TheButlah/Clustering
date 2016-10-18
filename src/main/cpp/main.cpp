@@ -42,6 +42,6 @@ int main(int argc, char** argv) {
   cout << "derp: " << derp << endl;
   derp = 2;
   cout << "herp: " << herp << endl;
-  cout << "derp: " << derp << endl;d
+  cout << "derp: " << derp << endl;
 
 }

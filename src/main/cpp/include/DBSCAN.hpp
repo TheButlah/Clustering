@@ -6,6 +6,7 @@
 
 
 class DBSCAN {
+
   public:
     enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
     DBSCAN(const std::vector<Point3D>& points, double epsilon, int minPts);
@@ -37,7 +38,7 @@ class DBSCAN {
             > my_kd_tree_t;
 
     const double eps;
-    const int minPts;
+    const size_t minPts;
 
     const PointCloud cloud;
 
@@ -46,7 +47,7 @@ class DBSCAN {
 
     void expandCluster(Point3D focalPoint,
                        std::vector<Point3D>& cluster,
-                       const std::vector<Point3D>& neighbors);
+                       std::vector<Point3D>& neighbors);
 
     std::vector<Point3D> getNeighbors(Point3D point);
 };
