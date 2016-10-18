@@ -44,7 +44,7 @@ void DBSCAN::expandCluster(Point3D focalPoint, std::vector<Point3D>& cluster,
                            std::vector<Point3D>& neighbors) {
   cluster.push_back(focalPoint);
   //auto it = neighbors.begin();
-  int i = 0;
+  size_t i = 0;
   while (i < neighbors.size()) {
     Point3D currentPoint = neighbors[i];
     //Holds a reference to the pointStatus in the vector,
