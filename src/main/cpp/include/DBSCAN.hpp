@@ -9,7 +9,7 @@ class DBSCAN {
 
   public:
     //enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
-    DBSCAN(const std::vector<Point3>& points, double epsilon, int minPts);
+    DBSCAN(const std::vector<Point3>& points, float epsilon, size_t minPts);
     std::vector< std::vector<Point3> > cluster();
 
     //inlined because templates in C++ need to be fully defined in headers
@@ -37,7 +37,7 @@ class DBSCAN {
             3
             > my_kd_tree_t;
 
-    const double eps;
+    const float eps;
     const size_t minPts;
 
     const PointCloud cloud;

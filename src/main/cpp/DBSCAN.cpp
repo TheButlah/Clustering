@@ -5,8 +5,8 @@
 
 using namespace std;
 
-DBSCAN::DBSCAN(const vector<Point3>& points, double epsilon, int minPts) :
-  eps(epsilon), minPts((size_t) minPts), cloud(PointCloud{points}),
+DBSCAN::DBSCAN(const vector<Point3>& points, float epsilon, size_t minPts) :
+  eps(epsilon), minPts(minPts), cloud(PointCloud{points}),
   tree(3,cloud,nanoflann::KDTreeSingleIndexAdaptorParams(10)) {
   tree.buildIndex();
 }
