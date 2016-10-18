@@ -8,7 +8,7 @@
 class DBSCAN {
 
   public:
-    enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
+    //enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
     DBSCAN(const std::vector<Point3D>& points, double epsilon, int minPts);
     std::vector< std::vector<Point3D> > cluster();
 
@@ -29,7 +29,7 @@ class DBSCAN {
   private:
     //int numPoints;
     //std::vector<Point3D> points;
-    typedef std::unordered_map<Point3D, PointStatus> statusmap_t;
+    typedef std::unordered_map<Point3D, uint8_t > statusmap_t;
     
     typedef nanoflann::KDTreeSingleIndexAdaptor<
             nanoflann::L2_Simple_Adaptor<double,PointCloud>,
