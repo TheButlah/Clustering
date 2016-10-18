@@ -14,7 +14,7 @@ using std::vector;
 using std::size_t;
 
 int main() {
-  vector<Point3D> points;
+  vector<Point3> points;
   string line;
   ifstream fid ("1modmod.csv");
   if (fid.is_open()) {
@@ -33,7 +33,7 @@ int main() {
       double x = point_doubles.at(0);
       double y = point_doubles.at(1);
       double z = atof(buffer.c_str());
-      points.push_back(Point3D{x, y, z});
+      points.push_back(Point3{x, y, z});
     }
     fid.close();
   }
@@ -42,17 +42,17 @@ int main() {
                                                -120, 120, 720,
                                                -100, 100, 600,
                                                -20, 20, 120);
-  vector<Point3D> center_points = occupancy_grid.get_grid();
+  vector<Point3> center_points = occupancy_grid.get_grid();
   DBSCAN dbscan(center_points, 1, 20);
-  vector<vector<Point3D> > clusters = dbscan.cluster();
+  vector<vector<Point3> > clusters = dbscan.cluster();
   auto finish = std::chrono::high_resolution_clock::now();
-  vector<vector<Point3D> >::iterator it = clusters.begin();
+  vector<vector<Point3> >::iterator it = clusters.begin();
   size_t idx = 1;
   for (; it != clusters.end(); it++) {
-    vector<Point3D> cluster = *it;
-    vector<Point3D>::iterator inner_it = cluster.begin();
+    vector<Point3> cluster = *it;
+    vector<Point3>::iterator inner_it = cluster.begin();
     for (; inner_it != cluster.end(); inner_it++) {
-      Point3D point = *inner_it;
+      Point3 point = *inner_it;
       // cout << point << ", " << idx << endl;
     }
     idx++;
