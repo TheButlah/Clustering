@@ -20,19 +20,19 @@ int main() {
   if (fid.is_open()) {
     while (getline(fid, line)) {
       string::iterator it = line.begin();
-      vector<double> point_doubles;
+      vector<float> point_floats;
       string buffer = "";
       for (; it != line.end(); it++) {
         if (*it == ',') {
-          point_doubles.push_back(atof(buffer.c_str()));
+          point_floats.push_back(atof(buffer.c_str()));
           buffer = "";
         } else if (*it != '\n') {
           buffer += *it;
         }
       }
-      double x = point_doubles.at(0);
-      double y = point_doubles.at(1);
-      double z = atof(buffer.c_str());
+      float x = point_floats.at(0);
+      float y = point_floats.at(1);
+      float z = atof(buffer.c_str());
       points.push_back(Point3{x, y, z});
     }
     fid.close();

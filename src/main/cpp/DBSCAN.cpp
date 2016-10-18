@@ -76,7 +76,7 @@ void DBSCAN::expandCluster(Point3 focalPoint, std::vector<Point3>& cluster,
 vector<Point3> DBSCAN::getNeighbors(Point3 point) {
   //pairs of pointindex, L2_Squared distance
   vector< pair<size_t,float> > pairs;
-  const auto query_pt[3] = {point.x,point.y,point.z};
+  const float query_pt[3] = {point.x,point.y,point.z};
   tree.radiusSearch(query_pt,eps,pairs,nanoflann::SearchParams());
   vector<Point3> neighbors(pairs.size());
   for (auto pair : pairs) {
