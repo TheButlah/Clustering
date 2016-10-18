@@ -39,11 +39,11 @@ int main() {
   }
   auto start = std::chrono::high_resolution_clock::now();
   OccupancyGrid occupancy_grid = OccupancyGrid(points,
-                                               -120, 120, 960,
-                                               -100, 100, 800,
-                                               -20, -20, 160);
+                                               -120, 120, 720,
+                                               -100, 100, 600,
+                                               -20, 20, 120);
   vector<Point3D> center_points = occupancy_grid.get_grid();
-  DBSCAN dbscan(center_points, 2, 20);
+  DBSCAN dbscan(center_points, 1, 20);
   vector<vector<Point3D> > clusters = dbscan.cluster();
   auto finish = std::chrono::high_resolution_clock::now();
   vector<vector<Point3D> >::iterator it = clusters.begin();
