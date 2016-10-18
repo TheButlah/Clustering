@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <chrono>
 #include "include/OccupancyGrid.hpp"
+#include "include/DBSCAN.hpp"
 
 using std::string;
 using std::ifstream;
@@ -40,20 +41,21 @@ int main() {
                                                -100.0, 100.0, 800,
                                                -20.0, 20.0, 160);
   vector<Point3D> center_points = occupancy_grid.get_grid();
-  DBSCAN dbscan = DBSCAN(center_points, 2, 10);
+  DBSCAN dbscan(center_points, 2, 10);
   vector<vector<Point3D> > clusters = dbscan.cluster();
   auto finish = std::chrono::high_resolution_clock::now();
   vector<vector<Point3D> >::iterator it = clusters.begin();
   int idx = 0;
-  for (; it < center_points.end(); it++) {
+  for (; it != clusters.end(); it++) {
     vector<Point3D>::iterator cluster_it = it->begin();
-    for (; cluster_it < it->end; cluster_it++) {
+    for (; cluster_it != it->end(); cluster_it++) {
       // Print points
-      cout << cluster_it + ", " + idx << endl;
+      cout << *cluster_it << ", " << idx << endl;
     }
     idx++;
   }
   // Print time
   cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
+  cout << clusters.size();
   return 0;
 }

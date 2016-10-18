@@ -12,6 +12,7 @@ DBSCAN::DBSCAN(const vector<Point3D>& points, double epsilon, int minPts) :
 vector< vector<Point3D> > DBSCAN::cluster() {
   vector< vector<Point3D> > clusters;
   for (const Point3D& point : cloud.pts) {
+    cout << "cluster loop" << endl;
     //Holds a reference to the pointStatus in the vector,
     //can directly assign things to this variable and it will work
     PointStatus& status = visited[point];
@@ -28,8 +29,10 @@ vector< vector<Point3D> > DBSCAN::cluster() {
       //Its a core point, mark it
       status = PointStatus::CLUSTERED;
       vector<Point3D> newCluster;
+      //cout << &newCluster << endl;
       expandCluster(point,newCluster,neighbors);
       clusters.push_back(newCluster);
+      //newCluster.~vector();
     }
   }
   return clusters;
@@ -40,10 +43,11 @@ vector< vector<Point3D> > DBSCAN::cluster() {
  */
 void DBSCAN::expandCluster(Point3D focalPoint, std::vector<Point3D>& cluster,
                            std::vector<Point3D>& neighbors) {
+  cout << "expandCluster" << endl;
   cluster.push_back(focalPoint);
-  auto it = cluster.begin();
+  auto it = neighbors.begin();
   int i = 0;
-  while (it != cluster.end()) {
+  while (it != neighbors.end()) {
     Point3D currentPoint = neighbors[i];
     //Holds a reference to the pointStatus in the vector,
     //can directly assign things to this variable and it will work
@@ -58,20 +62,26 @@ void DBSCAN::expandCluster(Point3D focalPoint, std::vector<Point3D>& cluster,
 
     //These points are visited, but might still be flagged as UNVISITED
     if (pointStatus != PointStatus::CLUSTERED) {
+      //cout << "YOLO" << endl;
       pointStatus = PointStatus::CLUSTERED;
+      //cout << cluster.size() << endl;
+      //cout << cluster.back() << endl;
       cluster.push_back(currentPoint);
+      //cout << cluster.back() << endl << endl;
+      //cout << cluster.size() <<endl<<endl;
     }
 
     //increment iterator, use this instead of it++ to be generic
     advance(it,1);
     i++;
   }
-
+  cout << cluster.size() << endl;
 }
 
 
 
 vector<Point3D> DBSCAN::getNeighbors(Point3D point) {
+  cout << "getNeighbors" << endl;
   //pairs of pointindex, L2_Squared distance
   vector< pair<size_t,double> > pairs;
   const double query_pt[3] = {point.x,point.y,point.z};
@@ -80,6 +90,7 @@ vector<Point3D> DBSCAN::getNeighbors(Point3D point) {
   for (auto pair : pairs) {
     neighbors.push_back(cloud.pts[pair.first]);
   }
+  //cout<<neighbors.size() << endl;
   return neighbors;
 }
 

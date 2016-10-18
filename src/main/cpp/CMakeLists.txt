@@ -4,7 +4,12 @@
 set(DBSCAN_FILES
     DBSCAN.cpp
     Point3D.cpp
-    OccupancyGrid.cpp)
+    OccupancyGrid.cpp
+    include/nanoflann.hpp
+    include/DBSCAN.hpp
+    include/OccupancyGrid.hpp
+    include/Point3D.hpp
+    include/PointCloud.hpp)
 
 add_library(dbscan ${DBSCAN_FILES})
 add_executable(demo main.cpp)

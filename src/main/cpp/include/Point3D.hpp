@@ -26,6 +26,7 @@ namespace std {
   // Hash function operator struct for use in unordered_set
   template<> struct hash<Point3D> {
     size_t operator()(const Point3D& point) const {
+      cout << "hash" << endl;
       std::size_t res = 17;
       res = res * 31 + std::hash<double>()( point.x );
       res = res * 31 + std::hash<double>()( point.y );
