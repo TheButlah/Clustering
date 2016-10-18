@@ -6,36 +6,36 @@ using std::unordered_set;
 
 
 OccupancyGrid::OccupancyGrid(const vector<Point3>& points,
-                             double x_min, double x_max, int x_num,
-                             double y_min, double y_max, int y_num,
-                             double z_min, double z_max, int z_num) :
+                             float x_min, float x_max, int x_num,
+                             float y_min, float y_max, int y_num,
+                             float z_min, float z_max, int z_num) :
                              points(points),
                              x_min(x_min), x_max(x_max), x_num(x_num),
                              y_min(y_min), y_max(y_max), y_num(y_num),
                              z_min(z_min), z_max(z_max), z_num(z_num) {}
 
-double OccupancyGrid::get_increment(double start, double end, int num) {
+float OccupancyGrid::get_increment(float start, float end, int num) {
   return (end - start) / num;
 }
 
-double OccupancyGrid::get_offset(double coordinate, double start) {
+float OccupancyGrid::get_offset(float coordinate, float start) {
   return coordinate - start;
 }
 
-int OccupancyGrid::get_index(double offset, double increment) {
+int OccupancyGrid::get_index(float offset, float increment) {
   return (int) (offset / increment);
 }
 
-double OccupancyGrid::get_center(int index, double increment, double start) {
+float OccupancyGrid::get_center(int index, float increment, float start) {
   return start + ((index + 0.5) * increment);
 }
 
-double OccupancyGrid::round_to_center(double start,
-                                      double end,
+float OccupancyGrid::round_to_center(float start,
+                                      float end,
                                       int num,
-                                      double coordinate) {
-  double increment = get_increment(start, end, num);
-  double offset = get_offset(coordinate, start);
+                                      float coordinate) {
+  float increment = get_increment(start, end, num);
+  float offset = get_offset(coordinate, start);
   int index = get_index(offset, increment);
   return get_center(index, increment, start);
 }
@@ -44,15 +44,15 @@ vector<Point3> OccupancyGrid::get_grid() {
   unordered_set<Point3> center_point_set;
   vector<Point3>::iterator point_it = points.begin();
   for (; point_it < points.end(); point_it++) {
-    double x_center = round_to_center(this->x_min,
+    float x_center = round_to_center(this->x_min,
                                       this->x_max,
                                       this->x_num,
                                       point_it->x);
-    double y_center = round_to_center(this->y_min,
+    float y_center = round_to_center(this->y_min,
                                       this->y_max,
                                       this->y_num,
                                       point_it->y);
-    double z_center = round_to_center(this->z_min,
+    float z_center = round_to_center(this->z_min,
                                       this->z_max,
                                       this->z_num,
                                       point_it->z);
