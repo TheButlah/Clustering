@@ -8,28 +8,17 @@
 
 using namespace std;
 
+/**
+ * This is the implementation for the DBSCAN class
+ */
 class DBSCAN::Impl {
 
   public:
-    //enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
+
     Impl(const std::vector<Point3>& points, float epsilon, size_t minPts);
     ~Impl() = default;
 
-
     std::vector< std::vector<Point3> > cluster();
-
-    /*//inlined because templates in C++ need to be fully defined in headers
-    template<class T>
-    void merge(std::vector<T>& resultVector,
-                             const std::vector<T>& otherVector) {
-
-      remove_copy_if(otherVector.begin(),otherVector.end(),
-                     back_inserter(resultVector),
-                     [&resultVector](T elt) -> bool {//This is a lambda function
-                         return resultVector.end() !=
-                                find(resultVector.begin(),resultVector.end(), elt);
-                     });
-    }*/
 
   private:
     typedef std::unordered_map<size_t, uint8_t > statusmap_t;
@@ -153,8 +142,6 @@ vector<size_t> DBSCAN::Impl::getNeighbors(size_t point) {
 
 DBSCAN::DBSCAN(const vector<Point3>& points, float epsilon, size_t minPts) :
   impl(new Impl(points, epsilon, minPts)) {}
-
-DBSCAN::~DBSCAN() {}
 
 std::vector< std::vector<Point3> > DBSCAN::cluster() {
   return impl->cluster();

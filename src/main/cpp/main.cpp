@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <stdlib.h>
 #include <chrono>
 #include "include/OccupancyGrid.hpp"
@@ -16,7 +15,7 @@ using std::size_t;
 int main() {
   vector<Point3> points;
   string line;
-  ifstream fid ("1modmod.csv");
+  ifstream fid("1modmod.csv");
   if (fid.is_open()) {
     while (getline(fid, line)) {
       string::iterator it = line.begin();
@@ -36,7 +35,11 @@ int main() {
       points.push_back(Point3{x, y, z});
     }
     fid.close();
+  } else {
+    std::cerr << "Error! Pointcloud CSV file not found!";
+    return 404;
   }
+  cout << "Running Occupancy Grid + Cluster Algorithm 500 times for benchmark:" << endl;
   auto start = std::chrono::high_resolution_clock::now();
   const int CYCLES = 500;
   for (int i=0;i<CYCLES;i++){
@@ -60,7 +63,9 @@ int main() {
     }
     idx++;
   }*/
-  cout << "Average Hz: " << CYCLES/(1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count())) << endl;
+  auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() * 1E-9;
+  cout << "Elapsed Time for " << CYCLES << " cycles: " << delta << endl;
+  cout << "Average Hz: " << CYCLES/(delta)<< endl;
   //cout << clusters.size() << endl;
   return 0;
 }
