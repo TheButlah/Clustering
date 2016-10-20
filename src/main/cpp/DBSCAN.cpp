@@ -1,17 +1,68 @@
+#include <bits/unique_ptr.h>
 #include "include/DBSCAN.hpp"
+#include "nanoflann.hpp"
+#include "PointCloud.hpp"
 #define UNVISITED 0
 #define NOISE 1
 #define CLUSTERED 2
 
 using namespace std;
 
-DBSCAN::DBSCAN(const vector<Point3>& points, float epsilon, size_t minPts) :
+class DBSCAN::Impl {
+
+  public:
+    //enum class PointStatus { UNVISITED, NOISE, CLUSTERED };
+    Impl(const std::vector<Point3>& points, float epsilon, size_t minPts);
+    ~Impl() = default;
+
+
+    std::vector< std::vector<Point3> > cluster();
+
+    /*//inlined because templates in C++ need to be fully defined in headers
+    template<class T>
+    void merge(std::vector<T>& resultVector,
+                             const std::vector<T>& otherVector) {
+
+      remove_copy_if(otherVector.begin(),otherVector.end(),
+                     back_inserter(resultVector),
+                     [&resultVector](T elt) -> bool {//This is a lambda function
+                         return resultVector.end() !=
+                                find(resultVector.begin(),resultVector.end(), elt);
+                     });
+    }*/
+
+  private:
+    typedef std::unordered_map<size_t, uint8_t > statusmap_t;
+
+
+    typedef nanoflann::KDTreeSingleIndexAdaptor<
+            nanoflann::L2_Simple_Adaptor<float,PointCloud>,
+            PointCloud,
+            3
+            > my_kd_tree_t;
+
+    const float eps;
+    const size_t minPts;
+
+    const PointCloud cloud;
+
+    my_kd_tree_t tree;
+    statusmap_t visited;
+
+    void expandCluster(size_t focalPoint,
+                       std::vector<size_t>& cluster,
+                       std::vector<size_t>& neighbors);
+
+    std::vector<size_t> getNeighbors(size_t point);
+};
+
+DBSCAN::Impl::Impl(const vector<Point3>& points, float epsilon, size_t minPts) :
   eps(epsilon), minPts(minPts), cloud(PointCloud{points}),
   tree(3,cloud,nanoflann::KDTreeSingleIndexAdaptorParams(10)) {
   tree.buildIndex();
 }
 
-vector< vector<Point3> > DBSCAN::cluster() {
+vector< vector<Point3> > DBSCAN::Impl::cluster() {
   vector< vector<size_t> > clusters;
 
   for (size_t i = 0; i<cloud.pts.size(); i++) {
@@ -53,7 +104,7 @@ vector< vector<Point3> > DBSCAN::cluster() {
 /**
  * IMPORTANT: Mutates the neighbors vector, recommend no using it after this
  */
-void DBSCAN::expandCluster(size_t focalPoint, std::vector<size_t>& cluster,
+void DBSCAN::Impl::expandCluster(size_t focalPoint, std::vector<size_t>& cluster,
                            std::vector<size_t>& neighbors) {
   cluster.push_back(focalPoint);
   //auto it = neighbors.begin();
@@ -66,7 +117,7 @@ void DBSCAN::expandCluster(size_t focalPoint, std::vector<size_t>& cluster,
     if (pointStatus == UNVISITED) {
       vector<size_t> newNeighbors = getNeighbors(currentPoint);
       if (newNeighbors.size() >= minPts) {
-        merge(neighbors,newNeighbors);
+        DBSCAN::merge(neighbors,newNeighbors);
       }
       //Otherwise, dont add the new neighbors
     }
@@ -84,9 +135,7 @@ void DBSCAN::expandCluster(size_t focalPoint, std::vector<size_t>& cluster,
 
 }
 
-
-
-vector<size_t> DBSCAN::getNeighbors(size_t point) {
+vector<size_t> DBSCAN::Impl::getNeighbors(size_t point) {
   //pairs of pointindex, L2_Squared distance
   vector< pair<size_t,float> > pairs;
   const Point3 point3 = cloud.pts[point];
@@ -99,6 +148,24 @@ vector<size_t> DBSCAN::getNeighbors(size_t point) {
   // cout << neighbors.size() << endl;
   return neighbors;
 }
+
+
+
+DBSCAN::DBSCAN(const vector<Point3>& points, float epsilon, size_t minPts) :
+  impl(new Impl(points, epsilon, minPts)) {}
+
+DBSCAN::~DBSCAN() {}
+
+std::vector< std::vector<Point3> > DBSCAN::cluster() {
+  return impl->cluster();
+}
+
+/*
+template<class T>
+void DBSCAN::merge(std::vector<T>& resultVector,
+                         const std::vector<T>& otherVector) {
+  impl->merge(resultVector,otherVector);
+}*/
 
 /*template<class T>
 void DBSCAN::merge(vector<T>& resultVector,

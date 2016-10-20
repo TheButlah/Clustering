@@ -38,15 +38,18 @@ int main() {
     fid.close();
   }
   auto start = std::chrono::high_resolution_clock::now();
-  OccupancyGrid occupancy_grid = OccupancyGrid(points,
-                                               -120, 120, 720,
-                                               -100, 100, 600,
-                                               -20, 20, 120);
-  vector<Point3> center_points = occupancy_grid.get_grid();
-  DBSCAN dbscan(center_points, 1, 20);
-  vector<vector<Point3> > clusters = dbscan.cluster();
+  const int CYCLES = 500;
+  for (int i=0;i<CYCLES;i++){
+    OccupancyGrid occupancy_grid = OccupancyGrid(points,
+                                                 -120, 120, 720,
+                                                 -100, 100, 600,
+                                                 -20, 20, 120);
+    vector<Point3> center_points = occupancy_grid.get_grid();
+    DBSCAN dbscan(center_points, 1, 20);
+    vector<vector<Point3> > clusters = dbscan.cluster();
+  }
   auto finish = std::chrono::high_resolution_clock::now();
-  vector<vector<Point3> >::iterator it = clusters.begin();
+  /*vector<vector<Point3> >::iterator it = clusters.begin();
   size_t idx = 1;
   for (; it != clusters.end(); it++) {
     vector<Point3> cluster = *it;
@@ -56,8 +59,8 @@ int main() {
       // cout << point << ", " << idx << endl;
     }
     idx++;
-  }
-  cout << 1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()) << endl;
-  cout << clusters.size() << endl;
+  }*/
+  cout << "Average Hz: " << CYCLES/(1e-9 * (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count())) << endl;
+  //cout << clusters.size() << endl;
   return 0;
 }
