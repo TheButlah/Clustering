@@ -2,8 +2,6 @@
 #include <vector>
 #include "Point3.hpp"
 #include <memory>
-//#include "../nanoflann.hpp"
-//#include "../PointCloud.hpp"
 
 class DBSCAN {
 
@@ -23,7 +21,7 @@ class DBSCAN {
      * @return          An instance of the DBSCAN object
      */
     DBSCAN(const std::vector<Point3>& points, float epsilon, size_t minPts);
-    ~DBSCAN() = default;
+    ~DBSCAN();
 
 
     /**
@@ -45,10 +43,10 @@ class DBSCAN {
      */
     template<class T>
     inline static void merge(std::vector<T>& resultVector,
-               const std::vector<T>& otherVector) {
+                             const std::vector<T>& otherVector) {
       remove_copy_if(otherVector.begin(),otherVector.end(),
                      back_inserter(resultVector),
-        //This is a lambda function
+                     //This is a lambda function
                      [&resultVector](T elt) -> bool {
                          return resultVector.end() !=
                                 find(resultVector.begin(), resultVector.end(), elt);

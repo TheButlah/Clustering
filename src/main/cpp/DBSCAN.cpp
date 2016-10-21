@@ -143,6 +143,8 @@ vector<size_t> DBSCAN::Impl::getNeighbors(size_t point) {
 DBSCAN::DBSCAN(const vector<Point3>& points, float epsilon, size_t minPts) :
   impl(new Impl(points, epsilon, minPts)) {}
 
+DBSCAN::~DBSCAN() = default;
+
 std::vector< std::vector<Point3> > DBSCAN::cluster() {
   return impl->cluster();
 }
