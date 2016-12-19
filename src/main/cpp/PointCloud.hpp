@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Point3.hpp"
+#include "Point4.hpp"
 #include <vector>
 
 struct PointCloud {
-  const std::vector<Point3>& pts;
+  const std::vector<Point4>& pts;
 
   inline size_t kdtree_get_point_count() const {
     return pts.size();

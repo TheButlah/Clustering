@@ -9,15 +9,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 #Helper variable for all the source files
 set(DBSCAN_FILES
     DBSCAN.cpp
+    OccupancyGrid.cpp
     Point3.cpp
-    OccupancyGrid.cpp)
+    Point4.cpp
+    RectangularMask.cpp)
 
 add_library(dbscan ${DBSCAN_FILES})
 add_executable(demo main.cpp)
 
 target_include_directories(dbscan PUBLIC include)
+target_include_directories(dbscan PUBLIC .)
 target_link_libraries(demo dbscan)
-#copy the demo executable to the resources directory in build
-add_custom_command(TARGET demo
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:demo> "${CMAKE_BINARY_DIR}/res")
